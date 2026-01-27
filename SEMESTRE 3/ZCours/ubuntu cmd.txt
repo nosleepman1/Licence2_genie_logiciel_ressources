@@ -1,0 +1,2 @@
+Connecter la machine à internet : dhclient
+Mettre à jour le système : apt-get update

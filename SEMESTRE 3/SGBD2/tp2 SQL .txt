@@ -1,0 +1,93 @@
+1.	Lister tous les livres écrits par l’auteur Amadou Hampaté Bâ.
+SQL : 
+
+	SELECT *
+	FROM livre l
+	WHERE l.auteur = 'Amadou Hampaté Ba'
+
+2.	Afficher les étudiants inscrits en L3 Informatique.
+SQL : 
+
+	SELECT e.nomEtudiant,e.prenomEtudiant,e.niveau,e.filiere
+	FROM etudiant e
+	WHERE e.filiere = 'Informatique' 
+		AND e.niveau = 'L3'
+
+3. Trouver les livres disponibles (c’est-à-dire sans emprunt en cours).
+	SELECT * 
+	FROM livre l
+	WHERE l.idLivre NOT IN
+		(SELECT e.fk_idLivre
+		FROM emprunt e 
+		WHERE e.dateRetour IS NULL);
+
+4. Obtenir la liste des éditeurs basés au Sénégal.
+
+SELECT *
+FROM Editeur
+WHERE pays ='sénégal';
+
+5. Afficher les étudiants ayant emprunté un livre intitulé Introduction à la Base de Donnée.
+
+# Distinct sert éliminer les doublons 
+SELECT distinct E.*
+FROM etudiant E
+	Inner Join emprunt EM 
+		ON E.idEtudiant = EM.fk_idEtudiant
+	Inner Join livre L 
+		ON EM.fk_idLivre = L.idLivre
+WHERE L.titre = 'Introduction à la Base de Donnée';
+
+
+6. Lister les livres empruntés entre le 1er janvier 2024 et le 31 mars 2024.
+SELECT distinct L.titre 
+from livre L
+inner join emprunt EM ON L.idLivre = EM.id_livre
+WHERE EM.date_emprunt between '2024-01-01' AND '2024-03-31'
+
+
+7. Trouver les étudiants qui n’ont jamais emprunté de livre.
+SELECT distinct nomEtudiant, prenomEtudiant
+from etudiant 
+WHERE idEtudiant Not in
+	(select distinct fk_idEtudiant 
+	fROM emprunt )
+
+
+8. Trouver le ou les livres avec le plus grand nombre de pages.
+SELECT  *
+from livre
+where nbpages=(select MAX(nbpages)from livre);
+9. Afficher les étudiants ayant au moins deux emprunts distincts.
+SELECT idEtudiant,nomEtudiant,prenomEtudiant,COUNT(distinct EM.idemprunt) NombreEmprunt
+from etudiant E
+join emprunt EM
+ON E.idEtudiant =EM.fk_idEtudiant
+Group by idEtudiant,nomEtudiant,prenomEtudiant
+HAVING NombreEmprunt >= 2
+	
+10. Trouver le ou les éditeurs qui ont publié le plus de livres.
+
+SELECT ED.idEditeur,ED.nomEditeur,COUNT(distinct L.idlivre) Nombrepublication
+from Editeur ED
+join livre L
+ON ED.idEditeur = L.fk_idEditeur
+Group by ED.idEditeur,ED.nomEditeur 
+HAVING Nombrepublication = (SELECT MAX(Nombrepublication1)
+					from ( SELECT L1.fk_idEditeur, COUNT(distinct L1.idLivre) Nombrepublication1
+							FROM livre L1
+							GROUP BY fk_idEditeur
+						) 	AS sous_requete
+			)
+
+
+11. Lister les bibliothécaires qui travaillent le samedi.
+12. Donner le nom et le prénom des bibliothécaires travaillant entre 14h00 et 18h00.
+13. Trouver les livres écrits par des auteurs différents de Cheikh Anta Diop.
+14. Lister les emprunts effectués par des étudiants en M1.
+15. Afficher les livres empruntés par au moins deux étudiants différents.
+16. Trouver les étudiants nés avant le 1er janvier 2000.
+17. Afficher les livres de genre Roman publiés après 2015.
+18. Trouver le titre du livre le plus emprunté.
+19. Trouver le nom des étudiants qui ont emprunté des livres d’auteurs français.
+20. Lister les étudiants qui n’ont pas encore rendu un livre emprunté.

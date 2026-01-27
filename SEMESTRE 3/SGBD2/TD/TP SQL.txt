@@ -1,0 +1,161 @@
+AUTEURS (ID_Auteur, Nom, Prenom, Nationalite )
+LIVRES ( ID_Livre, Titre, #ID_Auteur, Annee_Publication, Genre )
+ADHERENTS ( ID_Adherent, Nom, Prenom, Date_Naissance, Ville )
+EMPRUNTS ( ID_Emprunt, #ID_Adherent, #ID_Livre, Date_Emprunt, Date_Retour)
+
+
+
+1) Afficher tous les auteurs avec leurs nationalités
+SELECT Nom, Prenom, Nationalite
+FROM AUTEURS;
+
+2) Lister tous les livres avec leur titre et année de publication
+SELECT Titre, Annee_Publication
+FROM LIVRES;
+
+3) Trouver tous les adhérents qui habitent à Paris
+SELECT *
+FROM ADHERENTS
+WHERE Ville = 'Paris';
+
+4) Afficher la liste des livres empruntés
+SELECT DISTINCT L.*
+FROM LIVRES L, EMPRUNTS E
+WHERE L.ID_Livre = E.ID_Livre;
+
+5) Sélectionner tous les emprunts non retournés
+SELECT *
+FROM EMPRUNTS
+WHERE Date_Retour IS NULL;
+
+6) Afficher la liste des livres avec le nom de leur auteur
+SELECT L.Titre, A.Nom, A.Prenom
+FROM LIVRES L, AUTEURS A
+WHERE L.ID_Auteur = A.ID_Auteur;
+
+7) Lister tous les emprunts avec les informations complètes sur l’adhérent et le livre
+SELECT E.ID_Emprunt, AD.Nom, AD.Prenom, L.Titre, E.Date_Emprunt, E.Date_Retour
+FROM EMPRUNTS E, ADHERENTS AD, LIVRES L
+WHERE E.ID_Adherent = AD.ID_Adherent
+AND E.ID_Livre = L.ID_Livre;
+
+8) Trouver le nombre total de livres empruntés
+SELECT COUNT(DISTINCT(ID_Livre)) 
+FROM EMPRUNTS;
+
+9) Afficher le nombre d’emprunts par adhérent
+SELECT ID_Adherent, COUNT(*) 
+FROM EMPRUNTS
+GROUP BY ID_Adherent;
+
+10) Lister les auteurs ayant écrit au moins un livre de science-fiction
+SELECT DISTINCT A.Nom, A.Prenom
+FROM AUTEURS A, LIVRES L
+WHERE A.ID_Auteur = L.ID_Auteur
+AND L.Genre = 'Science-fiction';
+
+11) Afficher les livres qui n’ont jamais été empruntés
+SELECT *
+FROM LIVRES
+WHERE ID_Livre NOT IN (
+    SELECT ID_Livre FROM EMPRUNTS
+);
+
+12) Trouver les adhérents qui ont emprunté plus d’un livre
+SELECT ID_Adherent
+FROM EMPRUNTS
+GROUP BY ID_Adherent
+HAVING COUNT(ID_Livre) > 1;
+
+13) Lister les livres empruntés avant l’année 2024
+SELECT DISTINCT L.Titre
+FROM LIVRES L, EMPRUNTS E
+WHERE L.ID_Livre = E.ID_Livre
+AND YEAR(E.Date_Emprunt) < 2024;
+
+14) Sélectionner les livres empruntés par un adhérent vivant à Lyon
+SELECT DISTINCT L.Titre
+FROM LIVRES L, EMPRUNTS E, ADHERENTS A
+WHERE L.ID_Livre = E.ID_Livre
+AND E.ID_Adherent = A.ID_Adherent
+AND A.Ville = 'Lyon';
+
+15) Afficher les livres les plus récents dans chaque genre
+SELECT *
+FROM LIVRES L1
+WHERE Annee_Publication = (
+    SELECT MAX(Annee_Publication)
+    FROM LIVRES L2
+    WHERE L2.Genre = L1.Genre
+);
+
+16) Afficher la liste des emprunts avec une colonne Statut
+SELECT *,
+CASE
+    WHEN Date_Retour IS NULL THEN 'En cours'
+    ELSE 'Terminé'
+END
+FROM EMPRUNTS;
+
+17) Afficher la liste des adhérents avec une colonne Catégorie d’âge
+SELECT Nom, Prenom,
+CASE
+    WHEN TIMESTAMPDIFF(YEAR, Date_Naissance, CURDATE()) < 30 THEN 'Jeune'
+    WHEN TIMESTAMPDIFF(YEAR, Date_Naissance, CURDATE()) BETWEEN 30 AND 50 THEN 'Adulte'
+    ELSE 'Sénior'
+END
+FROM ADHERENTS;
+
+18) Trouver les livres empruntés le plus souvent
+SELECT ID_Livre, COUNT(*) 
+FROM EMPRUNTS
+GROUP BY ID_Livre
+ORDER BY COUNT(*) DESC
+LIMIT 3;
+
+19) Afficher la durée moyenne d’un emprunt en jours
+SELECT AVG(DATEDIFF(Date_Retour, Date_Emprunt))
+FROM EMPRUNTS
+WHERE Date_Retour IS NOT NULL;
+
+20) Lister les livres et indiquer s’ils sont anciens ou récents
+SELECT Titre,
+CASE
+    WHEN Annee_Publication < 1950 THEN 'Ancien'
+    ELSE 'Moderne'
+END
+FROM LIVRES;
+
+21) Écrire une requête permettant d’emprunter un livre
+INSERT INTO EMPRUNTS (ID_Emprunt, ID_Adherent, ID_Livre, Date_Emprunt)
+VALUES (1, 1, 1, CURDATE());
+
+22) Créer une transaction d’emprunt
+START TRANSACTION;
+INSERT INTO EMPRUNTS (ID_Emprunt, ID_Adherent, ID_Livre, Date_Emprunt)
+VALUES (2, 1, 2, CURDATE());
+COMMIT;
+
+23) Définir une procédure stockée ajouter_adherent
+CREATE PROCEDURE ajouter_adherent(
+    IN nom VARCHAR(50),
+    IN prenom VARCHAR(50),
+    IN date_naissance DATE,
+    IN ville VARCHAR(50)
+)
+INSERT INTO ADHERENTS VALUES (NULL, nom, prenom, date_naissance, ville);
+
+24) Créer une vue affichant les emprunts actifs
+CREATE VIEW emprunts_actifs AS
+SELECT *
+FROM EMPRUNTS
+WHERE Date_Retour IS NULL;
+
+25) Écrire une fonction retournant le nombre d’emprunts d’un adhérent
+CREATE FUNCTION nb_emprunts(idAdh INT)
+RETURNS INT
+RETURN (
+    SELECT COUNT(*)
+    FROM EMPRUNTS
+    WHERE ID_Adherent = idAdh
+);

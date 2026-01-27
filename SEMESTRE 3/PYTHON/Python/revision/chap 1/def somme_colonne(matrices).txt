@@ -1,0 +1,5 @@
+def somme_colonne(matrices):
+    nb_colonne = len(matrices[0])
+    somme = [sum(ligne[i] for ligne in matrices) for i in range(nb_colonne)]
+    return somme
+explication : 

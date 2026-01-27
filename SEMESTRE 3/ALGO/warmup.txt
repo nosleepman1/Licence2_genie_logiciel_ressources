@@ -1,0 +1,120 @@
+type Adresse = structure 
+	rue : entier
+	commune : chaine
+	ville : chaine
+
+Type Date = structure
+	j,m,a: entier
+	
+
+Type Personne = structure
+	prenom : chaine
+	nom : chaine
+	naiss : Date
+	
+	adresse : Adresse
+
+Type fic : ficher Personne
+Type arr : tableau[1...N] fic
+Type arrP : tableau[1...N] Personne
+
+
+
+
+
+Fonction estMajeur(datenaiss : Date) boolen
+	Si(2025 - dateNaiss.a < 18)
+	    retourner faux
+	Finsi
+	Retourner vrai
+FinFonction
+
+
+Porcedure Transfert( (D): tab:arr, N:entier,  (R): F:fic, T:arrP,n: entier)
+	var n,i : entier
+	var temp : Personne
+	var F : fic
+	
+	Ouvrir(F) ecriture
+	n<-0
+	Debut
+	 Pour i <- 1 à N faire
+	   Ouvrir(tab[i]) lecture
+	      Tantque ( EOF(tab[i] != faux) )
+		lire(tab[i], temp)
+		   Si(estMajeur(temp.naiss))
+		      ecrire(temp, F)
+		      Sinon
+			n <- n+1
+			T[n] <- temp
+		    FinSi
+		FinTantQue
+	    Fermer(tab[i]
+	  FinPour	
+	Fin
+FinProcedure
+
+Procedure sendFileToArray((D) F: fic, (R) TabPers: arrP, N: entier)
+	
+	var N: entier
+	var TabPers : arrP
+	var temp : Personne
+	
+	Debut
+	N<-0
+	Ouvrir (F) lecture
+	    TanQue ( EOF(F) != faux )
+		lire(F,temp)
+		N<-N+1
+		tabPers[N] <- temp
+	    FinTantQue
+	Fermer (F)
+FinProcedure 
+	
+
+Procedure presencePrenom((D): tab:arr, N:entier)
+	
+	//tableau pour nombre de presence
+	TabPers : arrP, n: entier
+
+	var cptPrenom, i, j, k, cptMaxPrenom, cptMaxPrenomAll: entier
+	var temp : Personne
+	
+	va MaxPrenom : chaine, MaxPrenomAll : chaine
+	
+	DEBUT
+	  cptMaxPrenomAll <- 0
+	  Pour i <- 1 à N faire
+	    sendFileToArray(tab[i], (R) TabPers, n)
+	    
+	    cptMaxPrenom <- 0
+	    Pour j <- 1 à n faire
+		cptPrenom <- 0
+		Pour k <-- 1 à n
+		    Si(TabPers[j] = TabPers[k])
+			cptPrenom <- cptPrenom + 1
+		    FinSi
+		FinPour
+		Si (cptPrenom > cptMaxPrenom)
+		    cptMaxPrenom <-- cptPrenom
+		    maxPrenom <-- TabPers[j].prenom
+		FinSi
+	     FinPour
+	     ecrire(maxPrenom, " est plus present dans le ficher ", i)
+	   FinPour
+		
+	   Si (cptMaxPrenom > cptMaxPrenomAll)
+		cptMaxPrenomAll <-- cptMaxPrenom
+		cptMaxPrenomAll <-- maxPrenom
+	   FinSi
+	FinPour 
+	ecrire(cptMaxPrenomAll, " est plus present dans le tableau de fichers ")
+      Fin
+		
+             
+			
+			
+			
+			   
+			
+						

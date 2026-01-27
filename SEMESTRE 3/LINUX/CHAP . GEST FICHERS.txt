@@ -1,0 +1,101 @@
+GESTION DES FICHERS
+
+1. Creation de ficher avec editeur(vi, vim, vim.tyny):
+ 	A. Creaction avec l'editeur VI
+ 			ex: vi fic puis appuyer sur I pour le mode insertion
+ 				enregistrement : esc : wq + enter
+ 				afficher contenu : cat fic
+
+ 	B. Creaction avec l'editeur VIM
+ 			ex: vim fic puis appuyer sur I pour le mode insertion
+ 				enregistrement : esc : wq + enter
+ 				afficher contenu : cat fic
+
+ 	B. Creaction avec l'editeur NANO
+ 			ex: nano fic puis appuyer sur I pour le mode insertion
+ 				enregistrement : esc : wq + enter
+ 				afficher contenu : cat fic
+C. Creaction avec l'editeur GEDIT
+ 			ex: gedit fic puis appuyer sur I pour le mode insertion
+ 				enregistrement : esc : wq + enter
+ 				afficher contenu : cat fic
+
+
+	
+	Si le ficher existe le contenu sera ecrasé…
+	- Avec deux signes supérieurs si le ficher n existe pas il sera créé, Si le ficher existe,  le contenu sera ajouté en fin de ficher 
+	- more affiche lecontenu du ficher par page
+	-tail / head ---firt and last + parameters
+	-sort + fileName / sort -r (reverse) / sort -n (si numeroté)
+	
+
+	
+	Creation ficher vide
+		touch Command
+
+			details d un ficher use WC command
+				wc -l fic (lines)
+				wc -w fic (words)
+				wc -m fic (characters)
+				wc -c fic (size of file)
+
+	Créer fic110 contenant : 
+		-page aide commande permettant de se situer sur le système
+		-les 5 dernieres lignes de la page d aide de la commande mkdir
+		-les 5 dernieres lignes de file3
+		fic110 etait au depart un ficher vide dans lequel on avait ajouté l arborescence du repertoire actif
+
+
+
+
+
+
+
+
+
+		$ touch fic110
+		$ tree > fic110
+		$ man pwd >> fic110
+		$ man mkdir > temp
+		$ tail -n5 temp >> fic110
+		$ tail -n5 file3 >> fic110
+
+	
+	Recherche dans un ficher
+		grep var fic111
+		^chaine -> chercher en debut de ligne
+		chaine$ -> endl
+		numeroter les lignes nl => like numerote lines
+
+		CONCATENATION DE COMMANDES	
+		
+		la ocncatenation de commandes consiste à executer plsieurs commandes en serie 
+		Avec la concatenation, seule la premiere commande recoit un arg les autres utiliseront comme args le resultat de la 		commande precedente
+
+		APPLICATION:
+			Créer un ficher fic114 contenant les lignes numerotés triées  de fic112 contenant les recherches var log 
+			et se terminant par n
+			Les 5 dernieres lignes triees de la page d aide de la commande nl 
+
+
+
+
+
+		 
+			grep var fic112 | grep log | grep n$ | sort | nl > fic114
+			man nl | sort | tail -n5 >> fic114
+
+			
+
+
+				
+
+MANIPULATION TABLEAUX
+
+commande **cut** permet d extraire le contenu d'un tableau  CUT -D: -F1 LISTE.DOC  ---- -d delimitateur / -f1 = colone a extraire
+
+	cut -d: -f3 liste.doc | grep l2gl | wc -l
+	
+
+
+cont etc/pwd contenant le rep user sort perpage
